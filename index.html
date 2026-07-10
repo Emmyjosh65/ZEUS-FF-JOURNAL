@@ -315,14 +315,699 @@
   </div>
 </footer>
 
-<!-- SCRIPTS (load in order) -->
-<script src="js/particles.js"></script>
-<script src="js/data.js"></script>
-<script src="js/news.js"></script>
-<script src="js/sensi.js"></script>
-<script src="js/store.js"></script>
-<script src="js/admin.js"></script>
-<script src="js/search.js"></script>
-<script src="js/main.js"></script>
-</body>
+<script>
+// ==================== PARTICLES ====================
+(function(){const c=document.getElementById('pc');if(!c)return;const x=c.getContext('2d');let w,h,p=[];function rs(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}rs();window.addEventListener('resize',rs);for(let i=0;i<65;i++){p.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2.5+0.5,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3})}function dr(){x.clearRect(0,0,w,h);for(let i=0;i<p.length;i++){for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<150){x.beginPath();x.strokeStyle='rgba(255,107,0,'+(0.06*(1-d/150))+')';x.lineWidth=0.5;x.moveTo(p[i].x,p[i].y);x.lineTo(p[j].x,p[j].y);x.stroke()}}for(let pt of p){pt.x+=pt.vx;pt.y+=pt.vy;if(pt.x<0||pt.x>w)pt.vx*=-1;if(pt.y<0||pt.y>h)pt.vy*=-1;x.beginPath();x.arc(pt.x,pt.y,pt.r,0,Math.PI*2);x.fillStyle='rgba(255,107,0,'+(Math.random()*0.12+0.04)+')';x.fill()}}requestAnimationFrame(dr)}dr()})();
+
+// ==================== DATA — EVO GUNS ====================
+const evoGuns=[
+  {name:'AK47 — Blue Flame Draco',icon:'🔫',desc:'The legendary first EVO gun with dragon fire effects.',price:'₦3,500',rating:5,featured:true,stats:{damage:'+25%',fireRate:'+15%',range:'+10%',reload:'-10%'},news:['Released Oct 2020 — first EVO gun in FF history.','OB34 boosted damage by 5%.','Returned in Evo Vault Sept 2025 with boosted stats.','High armor penetration for ranked matches.','Featured in multiple Faded Wheel events.']},
+  {name:'SCAR — Megalodon Alpha',icon:'🔫',desc:'Shark-themed EVO with aggressive appearance.',price:'₦3,200',rating:5,featured:true,stats:{damage:'+20%',fireRate:'+20%',stability:'+15%'},news:['Released Jan 2021 with aggressive shark design.','Unique hit effects and kill feed animations.','Returned Evo Vault Sept 2025 with Rate of Fire ++.','Pairs with the Megalodon bundle for full theme.','Most visually impressive EVO skin in FF.']},
+  {name:'MP40 — Predatory Cobra',icon:'🔫',desc:'Deadly SMG EVO with cobra effects and high damage.',price:'₦2,800',rating:5,featured:true,stats:{damage:'+22%',fireRate:'+18%',mobility:'+12%'},news:['Most popular EVO SMG skin in Free Fire.','OB42 gave significant CQC damage boost.','Featured in Jan 2025 Evo Vault as Chromasonic.','Dominates close-range combat completely.','Unique snake kill effects are visually stunning.']},
+  {name:'XM8 — Destiny Guardian',icon:'🔫',desc:'Powerful EVO with guardian protection effects.',price:'₦3,000',rating:4,featured:true,stats:{damage:'+28%',fireRate:'+12%',accuracy:'+18%'},news:['Strongest EVO XM8 skin available.','OB38 made it a top-tier weapon choice.','Returned in multiple Evo Vault events.','Guardian angel kill effects are beautiful.','Great for mid-to-long range engagements.']},
+  {name:'M4A1 — Griffin\'s Fury',icon:'🔫',desc:'Mythical griffin EVO with bird effects.',price:'₦3,300',rating:5,featured:true,stats:{accuracy:'+22%',stability:'+20%',damage:'+15%'},news:['Mythical griffin effects on the M4A1.','OB40 made it incredibly accurate.','Featured in Mythology themed event.','Griffin kill effect is one of the best.','Most accurate EVO weapon in Free Fire.']},
+  {name:'UMP — Booyah Day 2021',icon:'🔫',desc:'Anniversary UMP with celebration effects.',price:'₦2,500',rating:4,featured:true,stats:{damage:'+18%',fireRate:'+15%',magazine:'+8'},news:['Released for Booyah Day anniversary event.','OB35 made it competitive in ranked.','Returned Evo Vault Sept 2025.','Festive particle effects on kills.','Best affordable EVO for SMG players.']},
+  {name:'M1014 — Green Flame Draco',icon:'🔫',desc:'Devastating shotgun with green dragon flames.',price:'₦2,900',rating:4,featured:false,stats:{damage:'+30%',spread:'-15%',range:'+12%'},news:['Released May 2021 as 5th EVO skin.','Green dragon fire effects are unique.','OB39 increased one-shot potential.','Part of the Flame Draco collection.','Dominates in Clash Squad mode.']},
+  {name:'FAMAS — Demonic Grin',icon:'🔫',desc:'Burst rifle EVO with demonic animations.',price:'₦3,100',rating:4,featured:false,stats:{burstSpeed:'+25%',damage:'+20%',accuracy:'+12%'},news:['Demonic grin burst rifle effects.','OB41 improved burst speed significantly.','Unique evil grin kill feed effects.','Popular with competitive players.','High skill ceiling burst weapon.']},
+  {name:'Thompson — Cindered Colossus',icon:'🔫',desc:'Heavy SMG with volcanic fire effects.',price:'₦2,700',rating:4,featured:false,stats:{magazine:'+15',damage:'+18%',fireRate:'+12%'},news:['Volcanic fire effects on heavy SMG.','OB36 increased magazine capacity.','Part of Jan 2025 Evo Vault.','Great for suppressive fire tactics.','Volcanic eruption kill effect is epic.']},
+  {name:'AN94 — Evil Howler',icon:'🔫',desc:'High damage EVO with wolf howling effects.',price:'₦3,400',rating:4,featured:false,stats:{damage:'+24%',range:'+18%',accuracy:'+14%'},news:['Wolf howling themed AN94 skin.','High damage per shot marksman style.','OB43 increased effective range.','Howling wolf kill effect.','Growing popularity in competitive.']},
+  {name:'MP5 — Platinum Divinity',icon:'🔫',desc:'Smooth MP5 with platinum divine effects.',price:'₦2,600',rating:4,featured:false,stats:{fireRate:'+22%',mobility:'+18%',accuracy:'+10%'},news:['Platinum divine MP5 effects.','OB37 improved mobility stats.','Matches premium bundle themes.','Excellent for aggressive rushers.','Smooth minimal visual clutter.']},
+  {name:'M1887 — Sterling Conqueror',icon:'🔫',desc:'Premium shotgun with royal effects.',price:'₦3,200',rating:5,featured:false,stats:{damage:'+35%',range:'+15%',reload:'-20%'},news:['Royal conquering M1887 effects.','OB44 made it the best shotgun.','Crown kill effect is premium.','Highly sought after EVO.','Best one-shot kill potential.']},
+  {name:'Vector — Aquablaze Wrath',icon:'🔫',desc:'Dual Vector water-fire elemental effects.',price:'₦2,900',rating:4,featured:false,stats:{fireRate:'+30%',mobility:'+15%',reload:'-15%'},news:['Water-fire dual element skin.','Fastest firing SMG in Free Fire.','OB40 fire rate boost.','Insane TTK in Clash Squad.','Elemental effects switch randomly.']},
+  {name:'Woodpecker — Majestic Prowler',icon:'🔫',desc:'Marksman rifle with predator effects.',price:'₦3,600',rating:5,featured:true,stats:{damage:'+30%',range:'+22%',accuracy:'+20%'},news:['Predator themed marksman EVO.','Two-shot kill at any range easily.','Most expensive marksman EVO.','Paw print kill effects.','Dominates long range combat.']},
+  {name:'GROZA — Bang!',icon:'🔫',desc:'Airdrop EVO with explosive comic effects.',price:'₦4,000',rating:5,featured:true,stats:{damage:'+32%',fireRate:'+18%',range:'+15%'},news:['Comic-style explosive GROZA skin.','Most powerful AR EVO available.','OB42 armor penetration added.','Extremely rare airdrop only weapon.','Comic BANG! kill effect is unique.']},
+  {name:'AC80 — Scorpio Bane',icon:'🔫',desc:'New EVO with scorpion venom effects.',price:'₦3,800',rating:5,featured:true,stats:{damage:'+28%',fireRate:'+22%',accuracy:'+16%'},news:['Newest EVO in the collection.','Scorpion venom themed effects.','High damage and fire rate stats.','Coming in next Evo Vault update.','Most anticipated EVO of 2026.']}
+];
+
+// ==================== DATA — ENTRIES ====================
+const entriesData=[
+  {name:'Cyber Onslaught',icon:'🤖',desc:'Holographic cyber entrance with energy waves.',price:'₦2,500',type:'Epic',featured:true,effects:['Holographic Entrance','Energy Waves','Digital Particles','Cyber Sound']},
+  {name:'Dragon Fury',icon:'🐉',desc:'Dragon wings and fire entry animation.',price:'₦3,500',type:'Legendary',featured:true,effects:['Dragon Wings Spread','Fire Trail','Roar Sound','Ash Burst']},
+  {name:'Shadow Strike',icon:'👤',desc:'Stealth shadow materialization entry.',price:'₦2,200',type:'Epic',featured:true,effects:['Shadow Formation','Smoke Burst','Stealth Glow','Ninja Steps']},
+  {name:'Golden Emperor',icon:'👑',desc:'Royal golden flare entrance animation.',price:'₦4,000',type:'Legendary',featured:true,effects:['Golden Sparks','Royal Banner','Crown Flare','Trumpet Sound']},
+  {name:'Neon Rush',icon:'💠',desc:'Neon energy trail blast entry.',price:'₦2,800',type:'Epic',featured:false,effects:['Neon Trail','Color Shift','Light Burst','Synth Sound']},
+  {name:'Thunder God',icon:'⚡',desc:'Lightning strike descent entry.',price:'₦4,500',type:'Legendary',featured:true,effects:['Lightning Strike','Thunder Clap','Storm Clouds','Rain Effect']},
+  {name:'Phantom Walk',icon:'👻',desc:'Ghostly dimensional phase entry.',price:'₦3,000',type:'Epic',featured:false,effects:['Phase Shift','Ghost Trail','Dimensional Rift','Ethereal Sound']},
+  {name:'Firestorm',icon:'🔥',desc:'Massive fire explosion entrance.',price:'₦3,800',type:'Legendary',featured:false,effects:['Fire Explosion','Ash Rain','Heat Wave','Crackling Fire']},
+  {name:'Ice Emperor',icon:'❄️',desc:'Arctic freeze ground entry.',price:'₦3,600',type:'Legendary',featured:false,effects:['Ice Shatter','Snow Storm','Frost Trail','Crystal Sound']},
+  {name:'Space Walker',icon:'🌌',desc:'Cosmic wormhole teleport entry.',price:'₦4,800',type:'Mythic',featured:true,effects:['Wormhole Portal','Star Burst','Gravity Distortion','Cosmic Ambient']},
+  {name:'Demon Lord',icon:'👿',desc:'Underworld rise with hellfire.',price:'₦5,000',type:'Mythic',featured:true,effects:['Demonic Wings','Hellfire','Soul Drain','Demonic Roar']},
+  {name:'Angel Wings',icon:'👼',desc:'Holy light angel descent.',price:'₦3,500',type:'Legendary',featured:false,effects:['Feather Fall','Holy Light','Divine Aura','Celestial Choir']},
+  {name:'Ninja Dash',icon:'🥷',desc:'Ninja smoke bomb entrance.',price:'₦2,000',type:'Epic',featured:false,effects:['Smoke Bomb','Shuriken Spin','Speed Dash','Wind Sound']},
+  {name:'Galaxy Burst',icon:'🌠',desc:'Cosmic energy explosion entry.',price:'₦4,200',type:'Mythic',featured:true,effects:['Galaxy Swirl','Nova Burst','Cosmic Dust','Stellar Sound']},
+  {name:'Ghost Rider',icon:'🏍️',desc:'Spectral motorcycle ride-in.',price:'₦3,900',type:'Legendary',featured:false,effects:['Motorcycle Drift','Flame Trail','Ghost Wheels','Engine Rev']}
+];
+
+// ==================== DATA — DEVICES (30 popular models) ====================
+const deviceDB=[
+  {name:'iPhone 15 Pro Max',brand:'Apple',chipset:'A17 Pro',ram:'8GB',display:'6.7" OLED',os:'iOS 17',gpu:'Apple GPU 6-core',tier:'premium',rating:'10/10',graphics:'Ultra',fps:'90-120'},
+  {name:'iPhone 15 Pro',brand:'Apple',chipset:'A17 Pro',ram:'8GB',display:'6.1" OLED',os:'iOS 17',gpu:'Apple GPU 6-core',tier:'premium',rating:'10/10',graphics:'Ultra',fps:'90-120'},
+  {name:'iPhone 15 Plus',brand:'Apple',chipset:'A16 Bionic',ram:'6GB',display:'6.7" OLED',os:'iOS 17',gpu:'Apple GPU 5-core',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'iPhone 15',brand:'Apple',chipset:'A16 Bionic',ram:'6GB',display:'6.1" OLED',os:'iOS 17',gpu:'Apple GPU 5-core',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'iPhone 14 Pro Max',brand:'Apple',chipset:'A16 Bionic',ram:'6GB',display:'6.7" OLED',os:'iOS 16',gpu:'Apple GPU 5-core',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'iPhone 14 Pro',brand:'Apple',chipset:'A16 Bionic',ram:'6GB',display:'6.1" OLED',os:'iOS 16',gpu:'Apple GPU 5-core',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'iPhone 14',brand:'Apple',chipset:'A15 Bionic',ram:'6GB',display:'6.1" OLED',os:'iOS 16',gpu:'Apple GPU 4-core',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'iPhone 13 Pro Max',brand:'Apple',chipset:'A15 Bionic',ram:'6GB',display:'6.7" OLED',os:'iOS 15',gpu:'Apple GPU 5-core',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'iPhone 13',brand:'Apple',chipset:'A15 Bionic',ram:'4GB',display:'6.1" OLED',os:'iOS 15',gpu:'Apple GPU 4-core',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'iPhone 12 Pro Max',brand:'Apple',chipset:'A14 Bionic',ram:'6GB',display:'6.7" OLED',os:'iOS 14',gpu:'Apple GPU 4-core',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'iPhone 12',brand:'Apple',chipset:'A14 Bionic',ram:'4GB',display:'6.1" OLED',os:'iOS 14',gpu:'Apple GPU 4-core',tier:'high',rating:'7/10',graphics:'High',fps:'60'},
+  {name:'iPhone SE 3rd Gen',brand:'Apple',chipset:'A15 Bionic',ram:'4GB',display:'4.7" LCD',os:'iOS 15',gpu:'Apple GPU 4-core',tier:'mid',rating:'7/10',graphics:'Medium',fps:'60'},
+  {name:'Samsung Galaxy S24 Ultra',brand:'Samsung',chipset:'Snapdragon 8 Gen 3',ram:'12GB',display:'6.8" AMOLED',os:'Android 14',gpu:'Adreno 750',tier:'premium',rating:'10/10',graphics:'Ultra',fps:'90-120'},
+  {name:'Samsung Galaxy S24+',brand:'Samsung',chipset:'Exynos 2400',ram:'8GB',display:'6.7" AMOLED',os:'Android 14',gpu:'Xclipse 940',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90-120'},
+  {name:'Samsung Galaxy S24',brand:'Samsung',chipset:'Exynos 2400',ram:'8GB',display:'6.2" AMOLED',os:'Android 14',gpu:'Xclipse 940',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'Samsung Galaxy S23 Ultra',brand:'Samsung',chipset:'Snapdragon 8 Gen 2',ram:'8/12GB',display:'6.8" AMOLED',os:'Android 13',gpu:'Adreno 740',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90-120'},
+  {name:'Samsung Galaxy S23',brand:'Samsung',chipset:'Snapdragon 8 Gen 2',ram:'8GB',display:'6.1" AMOLED',os:'Android 13',gpu:'Adreno 740',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'Samsung Galaxy S22 Ultra',brand:'Samsung',chipset:'Exynos 2200',ram:'8/12GB',display:'6.8" AMOLED',os:'Android 12',gpu:'Xclipse 920',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'Samsung Galaxy S22',brand:'Samsung',chipset:'Exynos 2200',ram:'8GB',display:'6.1" AMOLED',os:'Android 12',gpu:'Xclipse 920',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'Samsung Galaxy A54',brand:'Samsung',chipset:'Exynos 1380',ram:'6/8GB',display:'6.4" AMOLED',os:'Android 13',gpu:'Mali-G68',tier:'mid',rating:'6/10',graphics:'Medium',fps:'60'},
+  {name:'Samsung Galaxy A34',brand:'Samsung',chipset:'Dimensity 1080',ram:'6/8GB',display:'6.6" AMOLED',os:'Android 13',gpu:'Mali-G68',tier:'mid',rating:'6/10',graphics:'Medium',fps:'60'},
+  {name:'Samsung Galaxy A14',brand:'Samsung',chipset:'Helio G80',ram:'4/6GB',display:'6.6" LCD',os:'Android 13',gpu:'Mali-G52',tier:'budget',rating:'4/10',graphics:'Smooth',fps:'60'},
+  {name:'Xiaomi 14 Pro',brand:'Xiaomi',chipset:'Snapdragon 8 Gen 3',ram:'12/16GB',display:'6.73" AMOLED',os:'Android 14',gpu:'Adreno 750',tier:'premium',rating:'10/10',graphics:'Ultra',fps:'90-120'},
+  {name:'Xiaomi 13 Pro',brand:'Xiaomi',chipset:'Snapdragon 8 Gen 2',ram:'8/12GB',display:'6.73" AMOLED',os:'Android 13',gpu:'Adreno 740',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'Redmi Note 13 Pro+',brand:'Redmi',chipset:'Dimensity 7200 Ultra',ram:'8/12GB',display:'6.67" AMOLED',os:'Android 13',gpu:'Mali-G610',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'Redmi Note 13 Pro',brand:'Redmi',chipset:'Snapdragon 7s Gen 2',ram:'8/12GB',display:'6.67" AMOLED',os:'Android 13',gpu:'Adreno 710',tier:'mid',rating:'7/10',graphics:'Medium',fps:'60'},
+  {name:'Redmi Note 13',brand:'Redmi',chipset:'Dimensity 6080',ram:'6/8GB',display:'6.67" AMOLED',os:'Android 13',gpu:'Mali-G57',tier:'mid',rating:'6/10',graphics:'Medium',fps:'60'},
+  {name:'Redmi Note 12',brand:'Redmi',chipset:'Snapdragon 685',ram:'4/6/8GB',display:'6.67" AMOLED',os:'Android 12',gpu:'Adreno 610',tier:'budget',rating:'5/10',graphics:'Smooth',fps:'60'},
+  {name:'POCO F6',brand:'POCO',chipset:'Snapdragon 8s Gen 3',ram:'8/12GB',display:'6.67" AMOLED',os:'Android 14',gpu:'Adreno 735',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90-120'},
+  {name:'POCO F5 Pro',brand:'POCO',chipset:'Snapdragon 8+ Gen 1',ram:'8/12GB',display:'6.67" AMOLED',os:'Android 13',gpu:'Adreno 730',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'POCO X6 Pro',brand:'POCO',chipset:'Dimensity 8300 Ultra',ram:'8/12GB',display:'6.67" AMOLED',os:'Android 14',gpu:'Mali-G615',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'Tecno Camon 20 Premier',brand:'TECNO',chipset:'Dimensity 1200',ram:'8GB',display:'6.67" AMOLED',os:'Android 13',gpu:'Mali-G77',tier:'high',rating:'7/10',graphics:'High',fps:'60'},
+  {name:'Tecno Camon 20 Pro',brand:'TECNO',chipset:'Dimensity 810',ram:'8GB',display:'6.67" AMOLED',os:'Android 13',gpu:'Mali-G57',tier:'mid',rating:'6/10',graphics:'Medium',fps:'60'},
+  {name:'Tecno Spark 20 Pro',brand:'TECNO',chipset:'Helio G99',ram:'8GB',display:'6.78" LCD',os:'Android 13',gpu:'Mali-G57',tier:'mid',rating:'6/10',graphics:'Medium',fps:'60'},
+  {name:'Tecno Spark 10',brand:'TECNO',chipset:'Helio G37',ram:'4/8GB',display:'6.6" LCD',os:'Android 12',gpu:'PowerVR GE8320',tier:'budget',rating:'3/10',graphics:'Smooth',fps:'30-60'},
+  {name:'Infinix Zero 30 5G',brand:'Infinix',chipset:'Dimensity 8020',ram:'8/12GB',display:'6.78" AMOLED',os:'Android 13',gpu:'Mali-G77',tier:'high',rating:'7/10',graphics:'High',fps:'60-90'},
+  {name:'Infinix Note 30 Pro',brand:'Infinix',chipset:'Helio G99',ram:'8GB',display:'6.78" LCD',os:'Android 13',gpu:'Mali-G57',tier:'mid',rating:'6/10',graphics:'Medium',fps:'60'},
+  {name:'Infinix Hot 40 Pro',brand:'Infinix',chipset:'Helio G99',ram:'8GB',display:'6.78" LCD',os:'Android 13',gpu:'Mali-G57',tier:'mid',rating:'5/10',graphics:'Medium',fps:'60'},
+  {name:'OPPO Find X7 Ultra',brand:'OPPO',chipset:'Snapdragon 8 Gen 3',ram:'12/16GB',display:'6.82" AMOLED',os:'Android 14',gpu:'Adreno 750',tier:'premium',rating:'10/10',graphics:'Ultra',fps:'90-120'},
+  {name:'OPPO Reno 11 Pro',brand:'OPPO',chipset:'Snapdragon 8+ Gen 1',ram:'12GB',display:'6.7" AMOLED',os:'Android 13',gpu:'Adreno 730',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'OPPO Reno 10',brand:'OPPO',chipset:'Snapdragon 778G',ram:'8GB',display:'6.7" AMOLED',os:'Android 13',gpu:'Adreno 642L',tier:'mid',rating:'7/10',graphics:'Medium',fps:'60'},
+  {name:'vivo X100 Pro',brand:'vivo',chipset:'Dimensity 9300',ram:'12/16GB',display:'6.78" AMOLED',os:'Android 14',gpu:'Mali-G720',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90-120'},
+  {name:'vivo V30 Pro',brand:'vivo',chipset:'Snapdragon 7 Gen 3',ram:'8/12GB',display:'6.78" AMOLED',os:'Android 14',gpu:'Adreno 720',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'},
+  {name:'vivo V29',brand:'vivo',chipset:'Snapdragon 778G',ram:'8/12GB',display:'6.78" AMOLED',os:'Android 13',gpu:'Adreno 642L',tier:'mid',rating:'7/10',graphics:'Medium',fps:'60'},
+  {name:'OnePlus 12',brand:'OnePlus',chipset:'Snapdragon 8 Gen 3',ram:'12/16GB',display:'6.82" AMOLED',os:'Android 14',gpu:'Adreno 750',tier:'premium',rating:'10/10',graphics:'Ultra',fps:'90-120'},
+  {name:'OnePlus 11',brand:'OnePlus',chipset:'Snapdragon 8 Gen 2',ram:'8/16GB',display:'6.7" AMOLED',os:'Android 13',gpu:'Adreno 740',tier:'premium',rating:'9/10',graphics:'Ultra',fps:'90'},
+  {name:'OnePlus Nord 3',brand:'OnePlus',chipset:'Dimensity 9000',ram:'8/16GB',display:'6.74" AMOLED',os:'Android 13',gpu:'Mali-G710',tier:'high',rating:'8/10',graphics:'High',fps:'60-90'}
+];
+
+// ==================== DATA — NEWS ====================
+const newsDB=[
+  {id:1,title:'OB54 Patch Notes — Full Breakdown',excerpt:'All new features, balance changes and bug fixes in OB54 update.',content:'The OB54 update brings massive changes to Free Fire including weapon balance pass, improved anti-cheat systems, and new ranked season. The "Fire Kickoff" football campaign starts June 5. New character adjustments optimize gameplay balance.',category:'update',date:'June 24, 2026',image:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop',author:'ZEUS',readTime:'4 min',featured:true},
+  {id:2,title:'Free Fire 9th Anniversary Celebration',excerpt:'Biggest social and in-game event ever for 9th anniversary.',content:'Garena Free Fire celebrates 9th anniversary with login rewards, exclusive character skins, limited-time game modes, and collaboration with popular creators. Anniversary bundle available in store for limited time.',category:'event',date:'June 20, 2026',image:'https://images.unsplash.com/photo-1536240478700-b869070f9279?w=400&h=250&fit=crop',author:'ZEUS',readTime:'3 min',featured:true},
+  {id:3,title:'Free Fire x GINTAMA Crossover',excerpt:'Comedy and samurai spirit in limited-time GINTAMA crossover.',content:'Free Fire x GINTAMA brings unique character bundles, weapon skins, and special events themed around the popular samurai comedy series. Exclusive GINTAMA items available through events and premium store.',category:'breaking',date:'June 18, 2026',image:'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=400&h=250&fit=crop',author:'ZEUS',readTime:'3 min',featured:true},
+  {id:4,title:'FFWS 2026 Esports Roadmap',excerpt:'24 teams, new Clash Squad tournament, EWC return.',content:'Garena reveals 2026 Esports Roadmap: Global Finals with 24 teams, standalone Clash Squad tournament debuting March 2026. FFWS SEA Spring April 24-May 31, Fall August 14-September 20. EWC 2026 July 15-18 in Riyadh.',category:'esports',date:'January 19, 2026',image:'https://images.unsplash.com/photo-1542751110-97427bbecf20?w=400&h=250&fit=crop',author:'ZEUS',readTime:'5 min',featured:true},
+  {id:5,title:'Jujutsu Kaisen Coming to Free Fire',excerpt:'Awaken the Curse — major anime crossover incoming.',content:'Free Fire confirms Jujutsu Kaisen collaboration with exclusive bundles based on Yuji Itadori, Gojo Satoru, and more. Cursed energy-themed weapons and effects coming. One of biggest anime crossovers in FF history.',category:'breaking',date:'January 15, 2026',image:'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&h=250&fit=crop',author:'ZEUS',readTime:'4 min',featured:true},
+  {id:6,title:'Evo Vault — All New Guns 2025',excerpt:'MP40 Chromasonic, Thompson Cindered Colossus and more.',content:'Evo Vault updated with four major EVO weapons: MP40 Chromasonic, Thompson Cindered Colossus, SCAR Megalodon Alpha, XM8 Destiny Guardian. Each with unique upgrade tokens and special effects.',category:'evo',date:'January 2, 2025',image:'https://images.unsplash.com/photo-1586287011575-a23134f797f9?w=400&h=250&fit=crop',author:'ZEUS',readTime:'3 min',featured:true},
+  {id:7,title:'Redeem Codes July 2026',excerpt:'Active Free Fire redeem codes with rewards.',content:'Latest Free Fire MAX redeem codes: P3LX6V9TM2QH, RD3TZK7WME65, ZRW3J4N8VX56 and more. Redeem at reward.ff.garena.com before they expire.',category:'update',date:'July 2, 2026',image:'https://images.unsplash.com/photo-1628202926206-c585c53e2c94?w=400&h=250&fit=crop',author:'ZEUS',readTime:'2 min',featured:false},
+  {id:8,title:'Undersea Mystery Ocean Update',excerpt:'New ocean-themed gameplay and underwater combat.',content:'Free Fire releases "Undersea Mystery" with underwater combat mechanics, aquatic weapons, sunken ship exploration, and water-themed character abilities. New ocean creature pets also available.',category:'update',date:'March 10, 2026',image:'https://images.unsplash.com/photo-1559827291-baf8a12d7b91?w=400&h=250&fit=crop',author:'ZEUS',readTime:'4 min',featured:false},
+  {id:9,title:'EWC 2026 — Free Fire Returns',excerpt:'Free Fire at Esports World Cup 2026 in Riyadh.',content:'Free Fire confirmed for EWC 2026 July 15-18 in Riyadh. 24 teams compete for prize pool and EWC title. Third consecutive year at Esports World Cup.',category:'esports',date:'January 19, 2026',image:'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=250&fit=crop',author:'ZEUS',readTime:'3 min',featured:false},
+  {id:10,title:'Best Sensitivity Settings 2026',excerpt:'Optimized sensitivity for all device tiers.',content:'Premium: General 90, Red Dot 85, 2x 75, 4x 60, Sniper 50. Mid-range: General 80, Red Dot 75, 2x 65, 4x 50, Sniper 40. Use ZEUS SENSI tool to find settings for your specific device.',category:'guide',date:'June 15, 2026',image:'https://images.unsplash.com/photo-1552820728-8b83bb6b62f2?w=400&h=250&fit=crop',author:'ZEUS',readTime:'5 min',featured:false}
+];
+
+// ==================== RENDER FUNCTIONS ====================
+function showPage(page){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('ac'));
+  const t=document.getElementById(page+'Page');
+  if(t)t.classList.add('ac');
+  document.querySelectorAll('.nl a').forEach(a=>a.classList.remove('ac'));
+  const map={home:0,news:1,evo:2,entry:3,sensi:4,hud:5,guides:6,redeem:7,store:8,community:9,admin:10};
+  const i=map[page];
+  if(i!==undefined){const l=document.querySelectorAll('.nl a');if(l[i])l[i].classList.add('ac')}
+  const nl=document.getElementById('nl');
+  if(nl.style.display==='flex'&&window.innerWidth<=768)nl.style.display='';
+  window.scrollTo({top:0,behavior:'smooth'})
+}
+function toggleMobile(){
+  const nl=document.getElementById('nl');
+  if(nl.style.display==='flex'){nl.style.display=''}
+  else{nl.style.cssText='display:flex;position:absolute;top:52px;left:0;width:100%;background:rgba(10,10,15,.98);flex-direction:column;padding:12px;border-bottom:1px solid rgba(255,107,0,.12);z-index:999'}
+}
+function closeModal(id){document.getElementById(id).style.display='none'}
+function showSuccess(msg){document.getElementById('successMsg').textContent=msg;document.getElementById('successModal').style.display='flex'}
+
+// ==================== MUSIC ====================
+let musicOn=false;
+function toggleMusic(){
+  const a=document.getElementById('ffTheme'),b=document.getElementById('musicBtn');
+  if(musicOn){a.pause();b.innerHTML='<i class="fas fa-music"></i>';b.classList.remove('on');musicOn=false}
+  else{a.play().then(()=>{b.innerHTML='<i class="fas fa-music" style="color:var(--gr)"></i>';b.classList.add('on');musicOn=true}).catch(()=>showSuccess('🎵 Click again (browser blocked autoplay)'))}
+}
+
+// ==================== NEWS ====================
+function renderNews(){
+  const c=document.getElementById('homeNews'),g=document.getElementById('guidesGrid');
+  if(c){c.innerHTML='';newsDB.filter(n=>n.featured).slice(0,6).forEach(n=>{c.appendChild(createNewsCard(n))})}
+  filterNews('all',document.querySelector('#newsTabs .ac'));
+  if(g){g.innerHTML='';const guides=newsDB.filter(n=>n.category==='guide');if(guides.length)guides.forEach(n=>g.appendChild(createNewsCard(n)));else{
+    ['Ultimate Headshot Guide','Rank Push to Heroic','Device Optimization'].forEach(t=>{
+      const cd=document.createElement('div');cd.className='cd';
+      cd.innerHTML='<div class="cimg" style="background:linear-gradient(135deg,var(--pu),#4a1b82)"><i class="fas fa-book"></i></div><div class="cbd"><span class="ctg tg">GUIDE</span><h3>'+t+'</h3><p>Pro tips and strategies for Free Fire.</p></div>';
+      cd.onclick=()=>{showSuccess('📖 '+t+' — Full guide coming soon!')};g.appendChild(cd)
+    })
+  }}
+}
+function createNewsCard(n){
+  const cd=document.createElement('div');cd.className='cd';
+  const cc={breaking:'tv',update:'tu',event:'te',esports:'tn',evo:'tv',guide:'tg'}[n.category]||'tn';
+  const cl={breaking:'BREAKING',update:'UPDATE',event:'EVENT',esports:'ESPORTS',evo:'EVO',guide:'GUIDE'}[n.category]||'NEWS';
+  cd.innerHTML='<div class="cimg" style="background:linear-gradient(135deg,#1a1a2e,#16213e)"><span style="font-size:28px">📰</span></div><div class="cbd"><span class="ctg '+cc+'">'+cl+'</span><h3>'+n.title+'</h3><p>'+n.excerpt+'</p><div class="cm"><span>📅 '+n.date+'</span><span>📖 '+n.readTime+'</span></div></div>';
+  cd.onclick=()=>{
+    document.getElementById('detailTitle').textContent='📰 '+n.title;
+    document.getElementById('detailBody').innerHTML='<div style="margin-bottom:10px"><span class="ctg '+cc+'">'+cl+'</span></div><p style="color:#ccc;font-size:13px;line-height:1.8">'+n.content+'</p><div style="margin-top:14px;display:flex;justify-content:space-between;color:#777;font-size:10px;font-family:Share Tech Mono,monospace"><span>✍️ '+n.author+'</span><span>📅 '+n.date+'</span><span>📖 '+n.readTime+'</span></div>';
+    document.getElementById('detailModal').style.display='flex'
+  };
+  return cd
+}
+function filterNews(cat,btn){
+  document.querySelectorAll('#newsTabs button').forEach(b=>b.classList.remove('ac'));
+  if(btn)btn.classList.add('ac');
+  const c=document.getElementById('allNews');
+  if(!c)return;c.innerHTML='';
+  (cat==='all'?newsDB:newsDB.filter(n=>n.category===cat)).forEach(n=>c.appendChild(createNewsCard(n)))
+}
+
+// ==================== EVO GUNS ====================
+function renderEvoGuns(){
+  ['homeEvo','evoStoreGrid'].forEach(id=>{
+    const c=document.getElementById(id);if(!c)return;
+    const items=id==='homeEvo'?evoGuns.filter(g=>g.featured):evoGuns;
+    c.innerHTML=items.map(g=>'<div class="ec" onclick="openEvoDetail(\''+g.name.replace(/'/g,"\\'")+'\')"><div class="eimg">'+g.icon+'</div><div class="ebd"><h4>'+g.name+'</h4><p>'+g.desc.substring(0,35)+'...</p><div class="stars">'+'★'.repeat(g.rating)+'☆'.repeat(5-g.rating)+'</div><div class="ep">'+g.price+'</div><button class="btn bp bs" style="width:100%;margin-top:6px" onclick="event.stopPropagation();openOrder(\''+g.name.replace(/'/g,"\\'")+'\',\''+g.price+'\')">🛒 BUY</button></div></div>').join('')
+  })
+}
+function renderEntries(){
+  ['entryGrid','homeEntry'].forEach(id=>{
+    const c=document.getElementById(id);if(!c)return;
+    const items=id==='homeEntry'?entriesData.filter(e=>e.featured):entriesData;
+    c.innerHTML=items.map(e=>'<div class="enc" onclick="openEntryDetail(\''+e.name.replace(/'/g,"\\'")+'\')"><div class="enimg">'+e.icon+'</div><div class="enbd"><h4>'+e.name+'</h4><p>'+e.desc+'</p><span class="ctg '+(e.type==='Mythic'?'tv':e.type==='Legendary'?'tn':'te2')+'">'+e.type+'</span></div></div>').join('')
+  })
+}
+function openEvoDetail(name){
+  const g=evoGuns.find(x=>x.name===name);if(!g)return;
+  const s=Object.entries(g.stats).map(([k,v])=>'<div class="si"><span class="lb">'+k.charAt(0).toUpperCase()+k.slice(1).replace(/([A-Z])/g,' $1')+'</span><span class="va">'+v+'</span></div>').join('');
+  const n=g.news.map(n=>'<li style="margin-bottom:4px;font-size:11px;color:#bbb">📌 '+n+'</li>').join('');
+  document.getElementById('detailTitle').textContent='⚡ '+g.name;
+  document.getElementById('detailBody').innerHTML='<div style="text-align:center;margin-bottom:12px"><div style="font-size:48px">'+g.icon+'</div><h3 style="color:var(--gd)">'+g.name+'</h3><div style="color:var(--gd);font-size:12px;margin:4px 0">'+'★'.repeat(g.rating)+'☆'.repeat(5-g.rating)+'</div><span style="font-size:20px;font-family:Orbitron,sans-serif;color:var(--gd)">'+g.price+'</span></div><p style="color:#ccc;font-size:12px;margin-bottom:14px">'+g.desc+'</p><div style="background:rgba(255,107,0,.04);border-radius:10px;padding:14px;margin-bottom:14px"><h4 style="color:var(--gd);font-size:11px;margin-bottom:8px">⚡ STATS</h4><div class="sg2">'+s+'</div></div><div style="margin-bottom:14px"><h4 style="color:var(--gd);font-size:11px;margin-bottom:8px">📰 NEWS</h4><ul style="padding-left:16px">'+n+'</ul></div><button class="btn bg" style="width:100%" onclick="closeModal(\'detailModal\');openOrder(\''+g.name.replace(/'/g,"\\'")+'\',\''+g.price+'\')">🛒 PURCHASE</button>';
+  document.getElementById('detailModal').style.display='flex'
+}
+function openEntryDetail(name){
+  const e=entriesData.find(x=>x.name===name);if(!e)return;
+  const ef=e.effects.map(ef=>'<li style="margin-bottom:4px;font-size:11px;color:#bbb">✨ '+ef+'</li>').join('');
+  document.getElementById('detailTitle').textContent='🎬 '+e.name;
+  document.getElementById('detailBody').innerHTML='<div style="text-align:center;margin-bottom:12px"><div style="font-size:48px">'+e.icon+'</div><h3 style="color:var(--gd)">'+e.name+'</h3><span class="ctg '+(e.type==='Mythic'?'tv':e.type==='Legendary'?'tn':'te2')+'">'+e.type+'</span><div style="margin-top:8px"><span style="font-size:20px;font-family:Orbitron,sans-serif;color:var(--gd)">'+e.price+'</span></div></div><p style="color:#ccc;font-size:12px;margin-bottom:14px">'+e.desc+'</p><div style="background:rgba(0,255,136,.04);border-radius:10px;padding:14px;margin-bottom:14px"><h4 style="color:var(--gd);font-size:11px;margin-bottom:8px">🎬 EFFECTS</h4><ul style="padding-left:16px">'+ef+'</ul></div>';
+  document.getElementById('detailModal').style.display='flex'
+}
+
+// ==================== SENSITIVITY ====================
+function searchDevice(){
+  const q=document.getElementById('deviceSearch').value.trim().toLowerCase();
+  const r=document.getElementById('sensiResult');
+  if(!q){r.classList.remove('ac');showSuccess('🔍 Enter a device name');return}
+  const f=deviceDB.filter(d=>d.name.toLowerCase().includes(q)||d.brand.toLowerCase().includes(q));
+  if(!f.length){r.classList.remove('ac');showSuccess('❌ Device not found. Try e.g. "iPhone 15" or "Samsung S24"');return}
+  const d=f[0];
+  document.getElementById('sensiDeviceName').textContent=d.name;
+  const tc={premium:'tv',high:'tn',mid:'tu',budget:'te2'};
+  document.getElementById('sensiTier').className='ctg '+(tc[d.tier]||'tn');
+  document.getElementById('sensiTier').textContent=d.tier.toUpperCase();
+  document.getElementById('deviceSpecs').innerHTML=
+    '<div class="si"><span class="lb">Brand</span><span class="va">'+d.brand+'</span></div>'+
+    '<div class="si"><span class="lb">Chipset</span><span class="va">'+d.chipset+'</span></div>'+
+    '<div class="si"><span class="lb">RAM</span><span class="va">'+d.ram+'</span></div>'+
+    '<div class="si"><span class="lb">Display</span><span class="va">'+d.display+'</span></div>'+
+    '<div class="si"><span class="lb">OS</span><span class="va">'+d.os+'</span></div>'+
+    '<div class="si"><span class="lb">GPU</span><span class="va">'+d.gpu+'</span></div>'+
+    '<div class="si"><span class="lb">Rating</span><span class="va">'+d.rating+'</span></div>'+
+    '<div class="si"><span class="lb">Graphics</span><span class="va">'+d.graphics+'</span></div>'+
+    '<div class="si"><span class="lb">FPS</span><span class="va">'+d.fps+'</span></div>';
+  r.classList.add('ac');
+  document.getElementById('proPinResult').style.display='none';
+  document.getElementById('sensiEditor').style.display='none';
+  document.getElementById('sensiOutput').style.display='none';
+  document.getElementById('proPin').value=''
+}
+const PRO_PIN='2007';
+function verifyProPin(){
+  const pin=document.getElementById('proPin').value.trim();
+  const r=document.getElementById('proPinResult');
+  let v=pin.length===4;
+  if(v){const a=[50,48,48,55];for(let i=0;i<4;i++){if(pin.charCodeAt(i)!==a[i]){v=false;break}}}
+  r.style.display='block';
+  if(v){
+    r.style.color='var(--gr)';r.innerHTML='✅ PRO UNLOCKED! Edit your sensitivity below:';
+    document.getElementById('sensiEditor').style.display='block';
+    const d=deviceDB.find(x=>x.name===document.getElementById('sensiDeviceName').textContent)||{tier:'mid'};
+    const p={premium:{gen:90,rd:85,sc2x:75,sc4x:60,sc6x:45,sc8x:35,sn:50,fl:75,dpi:400},high:{gen:85,rd:80,sc2x:70,sc4x:55,sc6x:40,sc8x:30,sn:45,fl:70,dpi:380},mid:{gen:80,rd:75,sc2x:65,sc4x:50,sc6x:35,sc8x:25,sn:40,fl:65,dpi:360},budget:{gen:75,rd:70,sc2x:60,sc4x:45,sc6x:30,sc8x:20,sn:35,fl:60,dpi:340}};
+    const s=p[d.tier]||p.mid;
+    document.getElementById('sensiInputs').innerHTML=
+      '<div class="si"><span class="lb">General</span><input type="number" class="si-input" data-k="gen" value="'+s.gen+'" min="0" max="100"></div>'+
+      '<div class="si"><span class="lb">Red Dot</span><input type="number" class="si-input" data-k="rd" value="'+s.rd+'" min="0" max="100"></div>'+
+      '<div class="si"><span class="lb">2x Scope</span><input type="number" class="si-input" data-k="sc2x" value="'+s.sc2x+'" min="0" max="100"></div>'+
+      '<div class="si"><span class="lb">4x Scope</span><input type="number" class="si-input" data-k="sc4x" value="'+s.sc4x+'" min="0" max="100"></div>'+
+      '<div class="si"><span class="lb">6x Scope</span><input type="number" class="si-input" data-k="sc6x" value="'+s.sc6x+'" min="0" max="100"></div>'+
+      '<div class="si"><span class="lb">8x Scope</span><input type="number" class="si-input" data-k="sc8x" value="'+s.sc8x+'" min="0" max="100"></div>'+
+      '<div class="si"><span class="lb">Sniper</span><input type="number" class="si-input" data-k="sn" value="'+s.sn+'" min="0" max="100"></div>'+
+      '<div class="si"><span class="lb">Free Look</span><input type="number" class="si-input" data-k="fl" value="'+s.fl+'" min="0" max="100"></div>'+
+      '<div class="si"><span class="lb">DPI</span><input type="number" class="si-input" data-k="dpi" value="'+s.dpi+'" min="200" max="600"></div>';
+    document.getElementById('sensiOutput').style.display='none'
+  } else {
+    r.style.color='var(--rd)';r.innerHTML='❌ Incorrect pass key. Contact the owner to obtain access.';document.getElementById('proPin').value=''
+  }
+}
+function saveSensi(){
+  const d=document.getElementById('sensiDeviceName').textContent;
+  const v={};document.querySelectorAll('.si-input').forEach(i=>{v[i.dataset.k]=i.value});
+  const o=document.getElementById('sensiOutput');
+  o.style.display='block';
+  const format=
+    '🔥 ZEUS PRO SENSI — '+d+'\n'+
+    '═══════════════════════\n'+
+    'General: '+v.gen+'\nRed Dot: '+v.rd+'\n2x Scope: '+v.sc2x+'\n4x Scope: '+v.sc4x+'\n6x Scope: '+v.sc6x+'\n8x Scope: '+v.sc8x+'\nSniper: '+v.sn+'\nFree Look: '+v.fl+'\nDPI: '+v.dpi+'\n'+
+    '═══════════════════════\nBy ZEUS FF JOURNAL';
+  document.getElementById('sensiFormat').textContent=format;
+  const saves=JSON.parse(localStorage.getItem('zeusSensiSaves')||'[]');
+  saves.push({device:d,values:v,date:new Date().toLocaleString()});
+  localStorage.setItem('zeusSensiSaves',JSON.stringify(saves));
+  showSuccess('✅ Sensitivity saved! Copy the format below.')
+}
+function resetSensi(){
+  document.querySelectorAll('.si-input').forEach(i=>{i.value=i.dataset.k==='gen'?85:i.dataset.k==='rd'?80:i.dataset.k==='sc2x'?70:i.dataset.k==='sc4x'?55:i.dataset.k==='sc6x'?40:i.dataset.k==='sc8x'?30:i.dataset.k==='sn'?45:i.dataset.k==='fl'?70:i.dataset.k==='dpi'?380:50});
+  showSuccess('🔄 Reset to recommended values')
+}
+function copySensi(){
+  const t=document.getElementById('sensiFormat').textContent;
+  navigator.clipboard.writeText(t).then(()=>showSuccess('📋 Copied!')).catch(()=>showSuccess('📋 Copy manually'))
+}// ==================== HUD BUILDER ====================
+let hudPlatform = 'android';
+let hudStyle = 'claw3';
+
+function selectHudPlatform(platform) {
+  hudPlatform = platform;
+  document.getElementById('hudAndroid').classList.toggle('ac', platform === 'android');
+  document.getElementById('hudiOS').classList.toggle('ac', platform === 'ios');
+  updateHudPreview();
+}
+
+function selectHudStyle(style) {
+  hudStyle = style;
+  document.querySelectorAll('.hud-option').forEach(o => o.classList.remove('ac'));
+  const labels = { claw3: '3-FINGER CLAW', claw4: '4-FINGER CLAW', claw2: '2-FINGER (NORMAL)', thumbs: 'THUMBS' };
+  document.querySelectorAll('.hud-container .hud-option').forEach(o => {
+    if (o.textContent.trim().includes(labels[style])) o.classList.add('ac');
+  });
+  updateHudPreview();
+}
+
+function updateHudPreview() {
+  const preview = document.getElementById('hudPreview');
+  const grid = document.getElementById('hudGrid');
+  
+  const layouts = {
+    android: {
+      claw3: [
+        { key: 'Joystick', pos: 'Bottom Left' }, { key: 'Fire', pos: 'Top Right' }, { key: 'Aim', pos: 'Bottom Right' },
+        { key: 'Jump', pos: 'Top Left' }, { key: 'Crouch', pos: 'Top Right 2' }, { key: 'Reload', pos: 'Right' },
+        { key: 'Scope', pos: 'Top Center' }, { key: 'Grenade', pos: 'Right 2' }, { key: 'Map', pos: 'Top Left 2' }
+      ],
+      claw4: [
+        { key: 'Joystick', pos: 'Bottom Left' }, { key: 'Fire', pos: 'Top Right' }, { key: 'Aim', pos: 'Bottom Right' },
+        { key: 'Jump', pos: 'Top Left' }, { key: 'Crouch', pos: 'Top Right 2' }, { key: 'Reload', pos: 'Right' },
+        { key: 'Scope', pos: 'Top Center' }, { key: 'Grenade', pos: 'Right 2' }, { key: 'Prone', pos: 'Bottom Center' }
+      ],
+      claw2: [
+        { key: 'Joystick', pos: 'Bottom Left' }, { key: 'Fire', pos: 'Bottom Right' }, { key: 'Aim', pos: 'Right' },
+        { key: 'Jump', pos: 'Left' }, { key: 'Crouch', pos: 'Right 2' }, { key: 'Reload', pos: 'Right 3' },
+        { key: 'Scope', pos: 'Top Right' }, { key: 'Grenade', pos: 'Top' }, { key: 'Map', pos: 'Top Left' }
+      ],
+      thumbs: [
+        { key: 'Joystick', pos: 'Bottom Left' }, { key: 'Fire', pos: 'Bottom Right' }, { key: 'Aim', pos: 'Right' },
+        { key: 'Jump', pos: 'Left 2' }, { key: 'Crouch', pos: 'Right 2' }, { key: 'Reload', pos: 'Right 3' },
+        { key: 'Scope', pos: 'Top Right' }, { key: 'Grenade', pos: 'Top Left' }, { key: 'Map', pos: 'Top Center' }
+      ]
+    },
+    ios: {
+      claw3: [
+        { key: 'Joystick', pos: 'Bottom Left' }, { key: 'Fire', pos: 'Top Right' }, { key: 'Aim', pos: 'Bottom Right' },
+        { key: 'Jump', pos: 'Top Left' }, { key: 'Crouch', pos: 'Top Right 2' }, { key: 'Reload', pos: 'Right' },
+        { key: 'Scope', pos: 'Top Center' }, { key: 'Grenade', pos: 'Right 2' }, { key: 'Map', pos: 'Top Left 2' }
+      ],
+      claw4: [
+        { key: 'Joystick', pos: 'Bottom Left' }, { key: 'Fire', pos: 'Top Right' }, { key: 'Aim', pos: 'Bottom Right' },
+        { key: 'Jump', pos: 'Top Left' }, { key: 'Crouch', pos: 'Top Right 2' }, { key: 'Reload', pos: 'Right' },
+        { key: 'Scope', pos: 'Top Center' }, { key: 'Grenade', pos: 'Right 2' }, { key: 'Prone', pos: 'Bottom Center' }
+      ],
+      claw2: [
+        { key: 'Joystick', pos: 'Bottom Left' }, { key: 'Fire', pos: 'Bottom Right' }, { key: 'Aim', pos: 'Right' },
+        { key: 'Jump', pos: 'Left' }, { key: 'Crouch', pos: 'Right 2' }, { key: 'Reload', pos: 'Right 3' },
+        { key: 'Scope', pos: 'Top Right' }, { key: 'Grenade', pos: 'Top' }, { key: 'Map', pos: 'Top Left' }
+      ],
+      thumbs: [
+        { key: 'Joystick', pos: 'Bottom Left' }, { key: 'Fire', pos: 'Bottom Right' }, { key: 'Aim', pos: 'Right' },
+        { key: 'Jump', pos: 'Left 2' }, { key: 'Crouch', pos: 'Right 2' }, { key: 'Reload', pos: 'Right 3' },
+        { key: 'Scope', pos: 'Top Right' }, { key: 'Grenade', pos: 'Top Left' }, { key: 'Map', pos: 'Top Center' }
+      ]
+    }
+  };
+
+  const layout = layouts[hudPlatform]?.[hudStyle] || layouts.android.claw3;
+  const platformName = hudPlatform === 'android' ? '🤖 ANDROID' : '🍎 iOS/iPhone';
+  const styleNames = { claw3: '3-Finger Claw', claw4: '4-Finger Claw', claw2: '2-Finger', thumbs: 'Thumbs' };
+  
+  grid.innerHTML = layout.map(l => 
+    `<div class="hud-cell"><span class="hud-key">${l.key}</span>${l.pos}</div>`
+  ).join('');
+  
+  preview.classList.add('ac');
+  preview.querySelector('h3').textContent = `📱 ${platformName} · ${styleNames[hudStyle]} LAYOUT`;
+}
+
+// ==================== STORE & ORDERS ====================
+function openOrder(product, price) {
+  document.getElementById('ordProduct').value = product;
+  document.getElementById('ordPrice').value = price;
+  document.getElementById('orderModal').style.display = 'flex';
+}
+
+function submitOrder() {
+  const uid = document.getElementById('ordUid').value.trim();
+  const nick = document.getElementById('ordNick').value.trim();
+  const ref = document.getElementById('ordRef').value.trim();
+  
+  if (!uid || !nick || !ref) {
+    showSuccess('⚠️ Please fill UID, Nickname, and Payment Reference');
+    return;
+  }
+  if (uid.length < 5) {
+    showSuccess('⚠️ Enter a valid UID (at least 5 digits)');
+    return;
+  }
+  
+  const order = {
+    id: '#' + String(Date.now()).slice(-6),
+    product: document.getElementById('ordProduct').value,
+    price: document.getElementById('ordPrice').value,
+    uid, nickname: nick, reference: ref,
+    notes: document.getElementById('ordNotes').value.trim() || '—',
+    status: 'PENDING',
+    date: new Date().toLocaleString()
+  };
+  
+  const orders = JSON.parse(localStorage.getItem('zeusOrders') || '[]');
+  orders.unshift(order);
+  localStorage.setItem('zeusOrders', JSON.stringify(orders));
+  
+  closeModal('orderModal');
+  document.getElementById('ordUid').value = '';
+  document.getElementById('ordNick').value = '';
+  document.getElementById('ordRef').value = '';
+  document.getElementById('ordNotes').value = '';
+  
+  showSuccess(`✅ Order placed!\nProduct: ${order.product}\nUID: ${order.uid}\nOrder ID: ${order.id}\n\n📱 Send payment screenshot to WhatsApp 09066760078`);
+}
+
+function submitTicket() {
+  const name = document.getElementById('ticketName').value.trim();
+  const contact = document.getElementById('ticketContact').value.trim();
+  const msg = document.getElementById('ticketMsg').value.trim();
+  
+  if (!name || !msg) {
+    showSuccess('⚠️ Enter your name and message');
+    return;
+  }
+  
+  const tickets = JSON.parse(localStorage.getItem('zeusTickets') || '[]');
+  tickets.unshift({ name, contact: contact || '—', message: msg, date: new Date().toLocaleString() });
+  localStorage.setItem('zeusTickets', JSON.stringify(tickets));
+  
+  document.getElementById('ticketName').value = '';
+  document.getElementById('ticketContact').value = '';
+  document.getElementById('ticketMsg').value = '';
+  showSuccess('✅ Ticket submitted! ZEUS will respond via WhatsApp.');
+}
+
+// ==================== REDEEM CODES ====================
+function renderRedeemCodes() {
+  const codes = JSON.parse(localStorage.getItem('zeusRedeemCodes') || '[]');
+  const homeCodes = document.getElementById('homeCodes');
+  const allCodes = document.getElementById('allCodes');
+  
+  const renderCodes = (container, items, limit) => {
+    if (!container) return;
+    const list = limit ? items.slice(0, limit) : items;
+    if (list.length === 0) {
+      container.innerHTML = '<div style="color:#888;text-align:center;padding:14px;grid-column:1/-1">No codes available yet. Check back later!</div>';
+      return;
+    }
+    container.innerHTML = list.map(c => `
+      <div class="code-item" onclick="copyCode('${c.code}')" title="Click to copy">
+        ${c.code}
+        <div class="code-date">${c.date}${c.status === 'used' ? ' • ❌ Used' : ''}</div>
+      </div>
+    `).join('');
+  };
+  
+  const active = codes.filter(c => c.status !== 'used');
+  renderCodes(homeCodes, active, 6);
+  renderCodes(allCodes, active);
+}
+
+function copyCode(code) {
+  navigator.clipboard.writeText(code).then(() => {
+    showSuccess(`✅ Copied: ${code}\nRedeem at reward.ff.garena.com`);
+  }).catch(() => {
+    showSuccess(`📋 Code: ${code}\nRedeem at reward.ff.garena.com`);
+  });
+}
+
+// ==================== ADMIN ====================
+const ADMIN_PASS = 'admin123';
+
+function loginAdmin() {
+  const pass = document.getElementById('adminPass').value.trim();
+  const expected = [97, 100, 109, 105, 110, 49, 50, 51];
+  let valid = pass.length === 8;
+  if (valid) for (let i = 0; i < 8; i++) if (pass.charCodeAt(i) !== expected[i]) { valid = false; break; }
+  
+  if (valid) {
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminDash').style.display = 'block';
+    renderAdminDashboard();
+    showSuccess('✅ Welcome to Admin Dashboard!');
+  } else {
+    showSuccess('❌ Incorrect password.');
+  }
+}
+
+function renderAdminDashboard() {
+  const orders = JSON.parse(localStorage.getItem('zeusOrders') || '[]');
+  const tickets = JSON.parse(localStorage.getItem('zeusTickets') || '[]');
+  const sensiSaves = JSON.parse(localStorage.getItem('zeusSensiSaves') || '[]');
+  const codes = JSON.parse(localStorage.getItem('zeusRedeemCodes') || '[]');
+  
+  const completed = orders.filter(o => o.status === 'COMPLETED').length;
+  const pending = orders.filter(o => o.status === 'PENDING').length;
+  const revenue = orders.filter(o => o.status === 'COMPLETED').reduce((s, o) => {
+    return s + (parseInt(o.price.replace(/[₦,]/g, '')) || 0);
+  }, 0);
+  
+  document.getElementById('adminStats').innerHTML = `
+    <div class="ab"><div class="an">${orders.length}</div><div class="al">Orders</div></div>
+    <div class="ab"><div class="an">${pending}</div><div class="al">Pending</div></div>
+    <div class="ab"><div class="an">${completed}</div><div class="al">Completed</div></div>
+    <div class="ab"><div class="an">${tickets.length}</div><div class="al">Tickets</div></div>
+    <div class="ab"><div class="an">${codes.length}</div><div class="al">Redeem Codes</div></div>
+    <div class="ab"><div class="an">₦${revenue.toLocaleString()}</div><div class="al">Revenue</div></div>
+  `;
+  
+  // Admin codes management
+  const adminCodes = document.getElementById('adminCodes');
+  adminCodes.innerHTML = codes.length ? codes.map((c, i) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid rgba(255,215,0,.04);font-family:'Share Tech Mono',monospace">
+      <span style="color:var(--gd)">${c.code}</span>
+      <div>
+        <span style="color:#888;font-size:9px">${c.date}</span>
+        <button class="btn bo bs" style="font-size:7px;padding:2px 6px;margin-left:6px;border-color:var(--rd);color:var(--rd)" onclick="deleteCode(${i})">✕</button>
+      </div>
+    </div>
+  `).join('') : '<p style="color:#888;text-align:center;padding:8px;font-size:11px">No codes added yet</p>';
+  
+  // Orders table
+  const tbody = document.getElementById('ordersTable');
+  if (orders.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#777;padding:20px;font-size:12px">No orders yet</td></tr>';
+  } else {
+    tbody.innerHTML = '<tr><th>ID</th><th>Product</th><th>UID</th><th>Nick</th><th>Amount</th><th>Status</th><th>Action</th></tr>' +
+      orders.map((o, i) => `<tr>
+        <td style="font-family:Share Tech Mono,monospace;color:var(--bl);font-size:10px">${o.id}</td>
+        <td style="font-size:10px">${o.product}</td>
+        <td style="font-family:Share Tech Mono,monospace;font-size:10px">${o.uid}</td>
+        <td style="font-size:10px">${o.nickname}</td>
+        <td style="color:var(--gd);font-family:Orbitron,sans-serif;font-size:11px">${o.price}</td>
+        <td><span class="stb ${o.status === 'COMPLETED' ? 'scp' : 'spd'}">${o.status}</span></td>
+        <td>
+          <button class="btn bo bs" style="font-size:7px;padding:2px 6px" onclick="completeOrder(${i})">✓</button>
+          <button class="btn bo bs" style="font-size:7px;padding:2px 6px;border-color:var(--rd);color:var(--rd)" onclick="deleteOrder(${i})">✕</button>
+        </td>
+      </tr>`).join('');
+  }
+  
+  // Tickets
+  const ticketsDiv = document.getElementById('ticketsList');
+  if (tickets.length === 0) {
+    ticketsDiv.innerHTML = '<p style="color:#888;text-align:center;padding:14px;font-size:11px">No tickets yet</p>';
+  } else {
+    ticketsDiv.innerHTML = tickets.map((t, i) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid rgba(255,107,0,.04)">
+        <div>
+          <p style="color:var(--gd);font-size:10px"><strong>${t.name}</strong> <span style="color:#777;font-size:9px">${t.contact}</span></p>
+          <p style="color:#bbb;font-size:10px">${t.message.substring(0, 80)}${t.message.length > 80 ? '...' : ''}</p>
+          <p style="color:#555;font-size:8px;font-family:Share Tech Mono,monospace">${t.date}</p>
+        </div>
+        <button class="btn bo bs" style="font-size:7px;padding:2px 6px;border-color:var(--rd);color:var(--rd)" onclick="deleteTicket(${i})">✕</button>
+      </div>
+    `).join('');
+  }
+}
+
+function addRedeemCode() {
+  const input = document.getElementById('newCodeInput');
+  const code = input.value.trim().toUpperCase();
+  if (!code) { showSuccess('⚠️ Enter a redeem code'); return; }
+  
+  const codes = JSON.parse(localStorage.getItem('zeusRedeemCodes') || '[]');
+  codes.unshift({ code, date: new Date().toLocaleDateString(), status: 'active' });
+  localStorage.setItem('zeusRedeemCodes', JSON.stringify(codes));
+  input.value = '';
+  renderAdminDashboard();
+  renderRedeemCodes();
+  showSuccess('✅ Code added: ' + code);
+}
+
+function deleteCode(index) {
+  const codes = JSON.parse(localStorage.getItem('zeusRedeemCodes') || '[]');
+  codes.splice(index, 1);
+  localStorage.setItem('zeusRedeemCodes', JSON.stringify(codes));
+  renderAdminDashboard();
+  renderRedeemCodes();
+  showSuccess('🗑️ Code deleted');
+}
+
+function completeOrder(index) {
+  const orders = JSON.parse(localStorage.getItem('zeusOrders') || '[]');
+  if (orders[index]) {
+    orders[index].status = 'COMPLETED';
+    localStorage.setItem('zeusOrders', JSON.stringify(orders));
+    renderAdminDashboard();
+    showSuccess('✅ Order completed');
+  }
+}
+
+function deleteOrder(index) {
+  const orders = JSON.parse(localStorage.getItem('zeusOrders') || '[]');
+  orders.splice(index, 1);
+  localStorage.setItem('zeusOrders', JSON.stringify(orders));
+  renderAdminDashboard();
+  showSuccess('🗑️ Order deleted');
+}
+
+function deleteTicket(index) {
+  const tickets = JSON.parse(localStorage.getItem('zeusTickets') || '[]');
+  tickets.splice(index, 1);
+  localStorage.setItem('zeusTickets', JSON.stringify(tickets));
+  renderAdminDashboard();
+  showSuccess('🗑️ Ticket deleted');
+}
+
+function clearAllOrders() {
+  if (confirm('Delete ALL orders?')) {
+    localStorage.setItem('zeusOrders', '[]');
+    renderAdminDashboard();
+    showSuccess('🗑️ Orders cleared');
+  }
+}
+
+function clearAllTickets() {
+  if (confirm('Delete ALL tickets?')) {
+    localStorage.setItem('zeusTickets', '[]');
+    renderAdminDashboard();
+    showSuccess('🗑️ Tickets cleared');
+  }
+}
+
+function exportOrders() {
+  const orders = JSON.parse(localStorage.getItem('zeusOrders') || '[]');
+  if (!orders.length) { showSuccess('No orders to export'); return; }
+  
+  let csv = 'ID,Product,UID,Nickname,Amount,Reference,Status,Date\n';
+  orders.forEach(o => csv += `"${o.id}","${o.product}","${o.uid}","${o.nickname}","${o.price}","${o.reference}","${o.status}","${o.date}"\n`);
+  
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `zeus-orders-${Date.now()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showSuccess('📤 Orders exported as CSV');
+}
+
+// ==================== SEARCH ====================
+function openSearch() {
+  document.getElementById('searchModal').style.display = 'flex';
+  document.getElementById('globalSearchInput').value = '';
+  document.getElementById('searchResults').innerHTML = '<p style="color:#888;text-align:center">Search EVO guns, entries, devices, news...</p>';
+  setTimeout(() => document.getElementById('globalSearchInput').focus(), 100);
+}
+
+function doGlobalSearch() {
+  const q = document.getElementById('globalSearchInput').value.trim().toLowerCase();
+  const r = document.getElementById('searchResults');
+  if (!q) { r.innerHTML = '<p style="color:#888;text-align:center">Type to search...</p>'; return; }
+  
+  let results = [];
+  evoGuns.forEach(g => { if (g.name.toLowerCase().includes(q)) results.push({ type: '🔫 EVO', name: g.name, price: g.price, action: `openEvoDetail('${g.name.replace(/'/g,"\\'")}')` }) });
+  entriesData.forEach(e => { if (e.name.toLowerCase().includes(q)) results.push({ type: '🎬 Entry', name: e.name, price: e.type, action: `openEntryDetail('${e.name.replace(/'/g,"\\'")}')` }) });
+  deviceDB.forEach(d => { if (d.name.toLowerCase().includes(q) || d.brand.toLowerCase().includes(q)) results.push({ type: '📱 Device', name: d.name, price: d.tier, action: `searchFromGlobal('${d.name.replace(/'/g,"\\'")}')` }) });
+  newsDB.forEach(n => { if (n.title.toLowerCase().includes(q)) results.push({ type: '📰 News', name: n.title.substring(0, 45), price: n.category, action: `openNewsFromSearch(${n.id})` }) });
+  
+  if (!results.length) { r.innerHTML = `<p style="color:#888;text-align:center">No results for "${q}"</p>`; return; }
+  
+  r.innerHTML = results.slice(0, 15).map(res => `
+    <div onclick="${res.action}" style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid rgba(255,107,0,.04);cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(255,107,0,.04)'" onmouseout="this.style.background='transparent'">
+      <div><span style="color:var(--bl);font-size:9px;font-family:Share Tech Mono,monospace">${res.type}</span><p style="color:#ddd;font-size:11px">${res.name}</p></div>
+      <span style="color:var(--gd);font-size:10px;font-family:Orbitron,sans-serif">${res.price}</span>
+    </div>
+  `).join('');
+}
+
+function searchFromGlobal(name) { closeModal('searchModal'); showPage('sensi'); document.getElementById('deviceSearch').value = name; searchDevice(); }
+function openNewsFromSearch(id) { closeModal('searchModal'); const n = newsDB.find(x => x.id === id); if (n) { document.querySelectorAll('#newsTabs button').forEach(b => b.classList.remove('ac')); filterNews('all', document.querySelector('#newsTabs button')); document.getElementById('detailTitle').textContent = '📰 ' + n.title; document.getElementById('detailBody').innerHTML = '<p style="color:#ccc;font-size:13px;line-height:1.8">' + n.content + '</p>'; document.getElementById('detailModal').style.display = 'flex'; } }
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.querySelectorAll('.gm').forEach(m => m.style.display = 'none');
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+});
+
+// ==================== TICKER ====================
+function renderTicker() {
+  const ticker = document.getElementById('tickerText');
+  if (!ticker) return;
+  const breaking = newsDB.filter(n => n.category === 'breaking').slice(0, 4);
+  const text = breaking.length ? breaking.map(n => '🔴 ' + n.title).join(' &nbsp;&nbsp;&nbsp;•••&nbsp;&nbsp;&nbsp; ') : '🔥 ZEUS FF JOURNAL — Your Ultimate Free Fire Companion!';
+  ticker.textContent = text;
+}
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', function() {
+  renderNews();
+  renderEvoGuns();
+  renderEntries();
+  renderRedeemCodes();
+  renderTicker();
+  selectHudPlatform('android');
+  selectHudStyle('claw3');
+  console.log('🔥 ZEUS FF JOURNAL loaded!');
+  console.log('👑 Owner: ZEUS | WhatsApp: 09066760078');
+  console.log('💳 OPay: Christiana Godwin Okon — 9066760078');
+});
+</script>
 </html>
