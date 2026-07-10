@@ -315,6 +315,7 @@
   </div>
 </footer>
 
+<!-- SCRIPTS (load in order) -->
 <script>
 // ==================== PARTICLES ====================
 (function(){const c=document.getElementById('pc');if(!c)return;const x=c.getContext('2d');let w,h,p=[];function rs(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}rs();window.addEventListener('resize',rs);for(let i=0;i<65;i++){p.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2.5+0.5,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3})}function dr(){x.clearRect(0,0,w,h);for(let i=0;i<p.length;i++){for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<150){x.beginPath();x.strokeStyle='rgba(255,107,0,'+(0.06*(1-d/150))+')';x.lineWidth=0.5;x.moveTo(p[i].x,p[i].y);x.lineTo(p[j].x,p[j].y);x.stroke()}}for(let pt of p){pt.x+=pt.vx;pt.y+=pt.vy;if(pt.x<0||pt.x>w)pt.vx*=-1;if(pt.y<0||pt.y>h)pt.vy*=-1;x.beginPath();x.arc(pt.x,pt.y,pt.r,0,Math.PI*2);x.fillStyle='rgba(255,107,0,'+(Math.random()*0.12+0.04)+')';x.fill()}}requestAnimationFrame(dr)}dr()})();
@@ -1010,4 +1011,5 @@ document.addEventListener('DOMContentLoaded', function() {
   console.log('💳 OPay: Christiana Godwin Okon — 9066760078');
 });
 </script>
+</body>
 </html>
